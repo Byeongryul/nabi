@@ -1,6 +1,12 @@
 const express = require('express');
 const router = express.Router();
 
+/**
+ * @swagger
+ * tags:
+ *  name: Dev
+ *  description: 개발 전용
+ */
 const devRouter = require('./dev');
 router.use('/dev', devRouter)
 
@@ -15,5 +21,11 @@ const fileRouter = require('./file');
  */
 router.use('/auth', authRouter)
 
+/**
+ * @swagger
+ * tags:
+ *  name: File
+ *  description: 로그인을 해야 작동합니다.
+ */
 router.use('/file', fileRouter)
 module.exports = router;

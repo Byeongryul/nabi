@@ -5,6 +5,7 @@ const session = require('express-session');
 const dotenv = require('dotenv');
 const logger = require('morgan');
 const passport = require('passport');
+const cors = require('cors')
 const { swaggerUi, specs } = require('./swagger/swagger');
 
 dotenv.config();
@@ -45,6 +46,7 @@ app.use(session({
 
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(cors());
 
 app.use((req, res, next) => {
   req.locals = {

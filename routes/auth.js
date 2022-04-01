@@ -5,12 +5,43 @@ const bcrypt = require('bcrypt');
 const { isLoggedIn, isNotLoggedIn } = require('./middlewares');
 
 const { sequelize } = require('../models');
-const { DataTypes } = require('Sequelize');
+const { DataTypes } = require('sequelize');
 const User = require('../models/User')(sequelize, DataTypes);
 
 const response = require('./response');
 const router = express.Router(); 
 
+/**
+ * @swagger
+ * paths:
+ *  /auth/join:
+ *    post:
+ *      summary: "회원가입"
+ *      description: "이메일과 비밀번호로 회원가입한다"
+ *      tags: [Auth]
+ *      requestBody:
+ *        description: "결과가 다를 수 있습니다."
+ *        required: true
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                email:
+ *                  type: string
+ *                password:
+ *                  type: string
+ *      responses:
+ *        "200":
+ *          description: 회원가입 성공
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  success:
+ *                    type: boolean
+ */
 router.post('/join', isNotLoggedIn, async (req, res, next) => {
   const { email, password } = req.body;
   try {
@@ -35,6 +66,37 @@ router.post('/join', isNotLoggedIn, async (req, res, next) => {
   }
 });
 
+/**
+ * @swagger
+ * paths:
+ *  /auth/login:
+ *    post:
+ *      summary: "로그인"
+ *      description: "이메일과 비밀번호로 로그인한다"
+ *      tags: [Auth]
+ *      requestBody:
+ *        description: "결과가 다를 수 있습니다."
+ *        required: true
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                email:
+ *                  type: string
+ *                password:
+ *                  type: string
+ *      responses:
+ *        "200":
+ *          description: 로그인 성공
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  success:
+ *                    type: boolean
+ */
 router.post('/login', isNotLoggedIn, (req, res, next) => {
   passport.authenticate('local', (authError, user, info) => {
     if (authError) {
@@ -63,6 +125,24 @@ router.post('/login', isNotLoggedIn, (req, res, next) => {
   })(req, res, next);
 });
 
+/**
+ * @swagger
+ *  /auth/logout:
+ *    get:
+ *      summary: "로그아웃"
+ *      description: "로그아웃 한다"
+ *      tags: [Auth]
+ *      responses:
+ *        "200":
+ *          description: 회원가입 성공
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  success:
+ *                    type: boolean
+ */
 router.get('/logout', isLoggedIn, (req, res) => {
   req.logout();
   req.session.destroy();
